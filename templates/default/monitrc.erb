@@ -1,0 +1,44 @@
+set daemon <%= @node[:monit][:poll_period] %> <% if @node[:monit][:poll_delay] %> with start delay <%= @node[:monit][:poll_delay] %><% end %>
+
+set idfile <%= @node[:monit][:idfile] %>
+set statefile <%= @node[:monit][:statefile] %>
+
+set eventqueue
+  basedir <%= @node[:monit][:eventqueue_basedir] %>
+  slots <%= @node[:monit][:eventqueue_slots] %>
+
+set mail-format { 
+  from: <%= @node[:monit][:mail_format][:from] %>
+  subject: <%= @node[:monit][:mail_format][:subject] %>
+  message: <%= @node[:monit][:mail_format][:message] %>
+}
+
+set mailserver <%= @node[:monit][:mailserver][:host] %><%= " port #{@node[:monit][:mailserver][:port]}" if @node[:monit][:mailserver][:port] %>
+<% if @node[:monit][:mailserver][:username] %>
+  username "<%= @node[:monit][:mailserver][:username] %>"
+<% end %>
+<% if @node[:monit][:mailserver][:password] %>
+  password "<%= @node[:monit][:mailserver][:password] %>"<%= " #{@node[:monit][:mailserver][:password_suffix]}" if @node[:monit][:mailserver][:password_suffix] %>
+<% end %>
+<% if @node[:monit][:mailserver][:using] %>
+  using <%= @node[:monit][:mailserver][:using] %>
+<% end %>
+<% if @node[:monit][:mailserver][:with] %>
+  with <%= @node[:monit][:mailserver][:with] %>
+<% end %>
+
+<% if @node[:monit][:mmonit] %>
+set mmonit <%= @node[:monit][:mmonit] %>
+<% end %>
+
+set httpd port <%= node[:monit][:http][:port] %> and
+  <%= "use address #{node[:monit][:http][:address]}" if node[:monit][:http][:address] %>
+<% node[:monit][:allow].each do |a| %>
+  allow <%= "#{a}" %>
+<% end %>
+<% if node[:monit][:ssl] %>
+  ssl enable
+  pemfile <%= node[:monit][:cert] %>
+<% end %>
+
+include /etc/monit/conf.d/*
