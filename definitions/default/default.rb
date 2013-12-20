@@ -1,0 +1,2 @@
+default[:monit][:source] = 'package'
+
