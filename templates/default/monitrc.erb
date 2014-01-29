@@ -31,7 +31,7 @@ set mailserver <%= @node[:monit][:mailserver][:host] %><%= " port #{@node[:monit
 set mmonit <%= @node[:monit][:mmonit] %>
 <% end %>
 
-set httpd port <%= node[:monit][:http][:port] %> and
+set httpd port <%= node[:monit][:http][:port] %>
   <%= "use address #{node[:monit][:http][:address]}" if node[:monit][:http][:address] %>
 <% node[:monit][:allow].each do |a| %>
   allow <%= "#{a}" %>
