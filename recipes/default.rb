@@ -32,6 +32,25 @@ elsif node[:monit][:source] == "package"
   package "monit"
 end
 
+case node["platform"]
+when "debian", "ubuntu"
+  template "/etc/monit/monitrc" do
+    source 'monitrc.erb'
+    owner "root"
+    group "root"
+    mode 0700
+    notifies :restart, "service[monit]"
+  end
+when "redhat", "centos", "fedora"
+  template "/etc/monit.conf" do
+    source 'monitrc.erb'
+    owner "root"
+    group "root"
+    mode 0700
+    notifies :restart, "service[monit]"
+  end
+end
+
 directory "/etc/monit/conf.d/" do
   action :create
   owner  'root'
@@ -40,16 +59,9 @@ directory "/etc/monit/conf.d/" do
   recursive true
 end
 
-template "/etc/monit/monitrc" do
-  source 'monitrc.erb'
-  owner "root"
-  group "root"
-  mode 0700
-  notifies :restart, "service[monit]"
-end
-
 service "monit" do
   action [:enable, :start]
   enabled true
   supports [:start, :restart, :stop]
 end
+
