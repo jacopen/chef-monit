@@ -23,3 +23,4 @@ EOF
 default[:monit][:mailserver][:host]  = 'example.com'
 default[:monit][:http][:port]        = '2812'
 default[:monit][:allow]              = ["admin:swordfish"]
+default[:monit][:disable_monitrc]    = false

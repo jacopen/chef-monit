@@ -40,12 +40,14 @@ directory "/etc/monit/conf.d/" do
   recursive true
 end
 
-template "/etc/monit/monitrc" do
-  source 'monitrc.erb'
-  owner "root"
-  group "root"
-  mode 0700
-  notifies :restart, "service[monit]"
+unless node[:monit][:disable_monitrc]
+  template "/etc/monit/monitrc" do
+    source 'monitrc.erb'
+    owner "root"
+    group "root"
+    mode 0700
+    notifies :restart, "service[monit]"
+  end
 end
 
 service "monit" do
