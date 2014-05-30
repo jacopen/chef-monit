@@ -2,6 +2,7 @@ set daemon <%= @node[:monit][:poll_period] %> <% if @node[:monit][:poll_delay] %
 
 set idfile <%= @node[:monit][:idfile] %>
 set statefile <%= @node[:monit][:statefile] %>
+set logfile <%= @node[:monit][:logfile] %>
 
 set eventqueue
   basedir <%= @node[:monit][:eventqueue_basedir] %>
