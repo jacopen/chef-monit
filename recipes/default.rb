@@ -29,6 +29,14 @@ if node[:monit][:source] == "installer"
   end
 
 elsif node[:monit][:source] == "package"
+  if node["platform"] == "fedora" || node["platform"] == "centos"
+    template "/etc/yum.repos.d/dag.repo" do
+      source 'dag.repo.erb'
+      owner "root"
+      group "root"
+      mode 0700
+    end
+  end
   package "monit"
 end
 
