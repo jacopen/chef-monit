@@ -13,6 +13,7 @@ if node[:monit][:source] == "installer"
     dpkg_package "monit" do
       source "/tmp/" + filename
       action :install
+      options "--force-confold" if node[:monit][:disable_monitrc]
     end
   when "redhat", "centos", "fedora"
     filename = node[:monit][:installer][:filename_rpm]
@@ -37,7 +38,14 @@ elsif node[:monit][:source] == "package"
       mode 0700
     end
   end
-  package "monit"
+  case node["platform"]
+  when "debian", "ubuntu"
+    package "monit" do
+      options "-o Dpkg::Options::='--force-confold'" if node[:monit][:disable_monitrc]
+    end
+  when "redhat", "centos", "fedora"
+    package "monit"
+  end
 end
 
 unless node[:monit][:disable_monitrc]
